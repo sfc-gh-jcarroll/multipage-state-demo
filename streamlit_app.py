@@ -1,50 +1,45 @@
 import streamlit as st
 
 """
-# Streamlit Multipage State Issue 
+# Streamlit Keyed Widget State Issue
 """
 
 st.info("""
-    This app shows an error in how state is stored across multipage apps in Streamit
-    1.15.2, and potentially since the beginning of mulitpage apps.
+    This app shows an issue with how state of widgets with `key=` is persisted across multipage apps,
+    and the same class of issue in a single page app format.
 """)
 
 """
 ---
-### **Step 1:** Type "ABC" into this dialog box
+## Single-page app version
 
-**Do no skip this step or the demo won't work!** Note that your text is stored in the
-state variable `foo`. This is the "correct behavior" for this page, since the semantics
-of key="foo" is that this dialog is now bound to that state variable.
-
+In the example below, the `text_input` widgets have a key set. Many developers expect that, by setting
+the key, it will persist the text input when you toggle from one view to the other and back. However,
+as you can see, currently the value is reset each time.
 """
+
 with st.echo():
-    st.text_input("Set the state variable foo", key="foo")
+    view = st.radio("View", ["view1", "view2"])
 
-"""
----
-### **Step 2:** Click this button to manually add bar to the is page.
+    if view == "view1":
+        st.text_input("Text1", key="text1")
+        "☝️ Enter some text, then click on view2 above"
+    elif view == "view2":
+        "☝️ Now go back to view1 and see if your text is still there"
 
-Note again how this is reflected below in the state.
-"""
-with st.echo():
-    def set_bar():
-        st.session_state.bar = 42
-    st.button("Set bar state", on_click = set_bar)
+with st.expander(':eyes: Now see the "fixed" version'):
+    'This shows the behavior many developers expect for the above code (using "shadow keys" approach)'
+    key = "text"
+    shadow_key = "_text"
+    if shadow_key not in st.session_state:
+        st.session_state[shadow_key] = st.session_state.get(key, "")
 
-"""
----
-### **Step 3:** Look at the session state.
+    view2 = st.radio("View ", ["view1", "view2"])
+    if view2 == "view1":
+        value = st.text_input("Text1", key=shadow_key)
+        st.session_state[key] = value
+        "☝️ Enter some text, then click on view2 above"
+    elif view2 == "view2":
+        "☝️ Now go back to view1 and see if your text is still there"
 
-**This session state should remain stable across page views.
-"""
-with st.echo():
-    st.write(st.session_state)
-
-"""
----
-### **Step 4:** Go to the other page.
-
-:point_left: Click on the next page, and see how the value of foo is preserved.
-"""
-
+"👈 Now click on `multi page version` to see another version of this behavior"
