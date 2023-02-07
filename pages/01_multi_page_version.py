@@ -7,6 +7,9 @@ st.info("""
     This app shows an issue with how state of widgets with `key=` is persisted across multipage apps,
     and the same class of issue in a single page app format.
 """)
+
+st.caption("View the app source code [here](https://github.com/sfc-gh-jcarroll/multipage-state-demo)")
+
 """
 ---
 ## Multi-page app version (Part 1)

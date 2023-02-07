@@ -9,6 +9,8 @@ st.info("""
     and the same class of issue in a single page app format.
 """)
 
+st.caption("View the app source code [here](https://github.com/sfc-gh-jcarroll/multipage-state-demo)")
+
 """
 ---
 ## Single-page app version
